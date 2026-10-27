@@ -1,0 +1,17 @@
+# Local development services for ConnectMe.
+# Usage: docker compose up -d
+#
+# The database is MongoDB Atlas (see MONGODB_URI in apps/api/.env.example), so only the
+# dev mail catcher runs locally. Ports are bound to 127.0.0.1 so it's never exposed to the LAN.
+services:
+  mailpit:
+    # Catches all outgoing email in dev. Web UI: http://localhost:8025
+    image: axllent/mailpit:v1.27
+    container_name: connectme-mailpit
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:1025:1025' # SMTP
+      - '127.0.0.1:8025:8025' # Web UI
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 'true'
+      MP_SMTP_AUTH_ALLOW_INSECURE: 'true'
